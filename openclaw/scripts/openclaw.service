@@ -1,0 +1,43 @@
+#!/system/bin/sh
+# openclaw/scripts/openclaw.service — internal service lifecycle
+INSTALL_DIR="/data/adb/openclaw"
+PID_FILE="$INSTALL_DIR/openclaw.pid"
+LOG="$INSTALL_DIR/openclaw.log"
+OPENCLAW_BIN="$INSTALL_DIR/bin/openclaw"
+
+start() {
+  if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
+    echo "Already running (PID $(cat "$PID_FILE"))"
+    return 0
+  fi
+  "$OPENCLAW_BIN" start --detach >> "$LOG" 2>&1 &
+  echo $! > "$PID_FILE"
+  echo "Started (PID $!)"
+}
+
+stop() {
+  if [ -f "$PID_FILE" ]; then
+    PID=$(cat "$PID_FILE")
+    kill "$PID" 2>/dev/null && rm -f "$PID_FILE" && echo "Stopped"
+  else
+    "$OPENCLAW_BIN" stop 2>/dev/null || true
+    echo "Stopped"
+  fi
+}
+
+status() {
+  if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
+    echo "running (PID $(cat "$PID_FILE"))"
+  else
+    echo "stopped"
+  fi
+}
+
+case "${1:-status}" in
+  start)   start ;;
+  stop)    stop ;;
+  restart) stop; sleep 1; start ;;
+  status)  status ;;
+  log)     tail -f "$LOG" ;;
+  *)       echo "Usage: {start|stop|restart|status|log}" ;;
+esac

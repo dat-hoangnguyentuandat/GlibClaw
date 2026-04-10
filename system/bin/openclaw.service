@@ -1,0 +1,16 @@
+#!/system/bin/sh
+# openclaw.service wrapper — /system/bin/openclaw.service
+INSTALL_DIR="/data/adb/openclaw"
+export PATH="$INSTALL_DIR/glibc-node/bin:$INSTALL_DIR/bin:$PATH"
+export HOME="$INSTALL_DIR/home"
+OPENCLAW_BIN="$INSTALL_DIR/bin/openclaw"
+
+CMD="${1:-status}"
+case "$CMD" in
+  start)   exec "$OPENCLAW_BIN" start --detach ;;
+  stop)    exec "$OPENCLAW_BIN" stop ;;
+  restart) "$OPENCLAW_BIN" stop; sleep 1; exec "$OPENCLAW_BIN" start --detach ;;
+  status)  exec "$OPENCLAW_BIN" status ;;
+  log)     tail -f "$INSTALL_DIR/install.log" ;;
+  *)       echo "Usage: openclaw.service {start|stop|restart|status|log}"; exit 1 ;;
+esac

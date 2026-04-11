@@ -25,17 +25,9 @@ A Magisk/KernelSU module that installs [OpenClaw](https://openclaw.ai) on Androi
 
 ## Installation
 
-### Option 1 — Offline (Recommend)
-
-1. Download [`GlibClaw-offline-v1.0.0.zip`](https://github.com/dat-hoangnguyentuandat/GlibClaw/releases)
-2. Flash via Magisk / KernelSU
-3. Reboot
-
-### Option 2 — Online (May not work on some devices)
-
 Requires internet connection during flash.
 
-1. Download [`GlibClaw-online-v1.0.0.zip`](https://github.com/dat-hoangnguyentuandat/GlibClaw/releases)
+1. Download `GlibClaw-online-v1.0.1.zip`
 2. Flash via Magisk / KernelSU
 3. Reboot
 

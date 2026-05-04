@@ -1,7 +1,7 @@
 id=glibclaw
 name=GlibClaw
-version=1.0.1
-versionCode=101
+version=1.0.2
+versionCode=102
 author=TDat
 description=Install OpenClaw on Android Root via Magisk/KernelSU.
 updateJson=

@@ -1,7 +1,7 @@
 #!/system/bin/sh
 # openclaw.service wrapper — /system/bin/openclaw.service
 INSTALL_DIR="/data/adb/openclaw"
-export PATH="$INSTALL_DIR/glibc-node/bin:$INSTALL_DIR/bin:$PATH"
+export PATH="$INSTALL_DIR/node/bin:$INSTALL_DIR/bin:$PATH"
 export HOME="$INSTALL_DIR/home"
 OPENCLAW_BIN="$INSTALL_DIR/bin/openclaw"
 

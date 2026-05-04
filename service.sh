@@ -1,7 +1,7 @@
 #!/system/bin/sh
 
 # ============================================================
-# OpenClaw — service.sh
+# GlibClaw — service.sh
 # Runs on every boot by Magisk/KSU (root context)
 # ============================================================
 
@@ -9,7 +9,7 @@ INSTALL_DIR="/data/adb/openclaw"
 LOG="$INSTALL_DIR/openclaw.log"
 OPENCLAW_BIN="$INSTALL_DIR/bin/openclaw"
 STATE_FILE="$INSTALL_DIR/.install_state"
-GLIBC_NODE="$INSTALL_DIR/glibc-node/bin/node"
+NODE_BIN="$INSTALL_DIR/node/bin/node"
 DOH_PROXY="$INSTALL_DIR/doh-proxy.mjs"
 DOH_PORT=5300
 
@@ -39,14 +39,14 @@ sleep 0.3
 
 echo "[$(date '+%H:%M:%S')] Starting DoH proxy on port $DOH_PORT..." >> "$LOG"
 
-DOH_PORT=$DOH_PORT "$GLIBC_NODE" "$DOH_PROXY" >> "$LOG" 2>&1 &
+DOH_PORT=$DOH_PORT "$NODE_BIN" "$DOH_PROXY" >> "$LOG" 2>&1 &
 DOH_PID=$!
 echo $DOH_PID > "$INSTALL_DIR/doh-proxy.pid"
 
-# Chờ proxy bind xong
+# Wait for proxy to bind
 sleep 2
 
-# Verify proxy đang chạy
+# Verify proxy is running
 if ! kill -0 $DOH_PID 2>/dev/null; then
   echo "[$(date '+%H:%M:%S')] WARNING: DoH proxy exited early, DNS may fail" >> "$LOG"
 else
@@ -57,7 +57,7 @@ iptables -t nat -D OUTPUT -p udp --dport 53 -j REDIRECT --to-port $DOH_PORT 2>/d
 iptables -t nat -D OUTPUT -p tcp --dport 53 -j REDIRECT --to-port $DOH_PORT 2>/dev/null || true
 iptables -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-port $DOH_PORT
 iptables -t nat -A OUTPUT -p tcp --dport 53 -j REDIRECT --to-port $DOH_PORT
-echo "[$(date '+%H:%M:%S')] iptables DNS redirect 53→$DOH_PORT applied" >> "$LOG"
+echo "[$(date '+%H:%M:%S')] iptables DNS redirect 53->$DOH_PORT applied" >> "$LOG"
 
 echo "[$(date '+%H:%M:%S')] Starting openclaw gateway..." >> "$LOG"
 
